@@ -43,6 +43,8 @@ function love.update(dt)
         handle_movement_by_keyboard(in_game_snake, movement_direction)
         check_border_collision(game_properties, in_game_snake, movement_direction)
         check_eaten_fruit(in_game_snake, in_game_fruit, game_properties)
+        handle_snake_segments(game_properties, in_game_snake)
+        check_tail_collision(game_properties, in_game_snake)
     end
 end
 
@@ -67,6 +69,10 @@ end
 function love.draw()
     love.graphics.setColor(0, 0.8, 0)
     love.graphics.rectangle("fill", in_game_snake.position_x, in_game_snake.position_y, in_game_snake.width, in_game_snake.height)
+
+    for _, segment in ipairs(in_game_snake.tail_segments) do
+        love.graphics.rectangle("fill", segment[1], segment[2], in_game_snake.width, in_game_snake.height, 5, 5)
+    end
 
     love.graphics.setColor(1, 0, 0)
     love.graphics.rectangle("fill", in_game_fruit.position_x, in_game_fruit.position_y, in_game_fruit.width, in_game_fruit.height)

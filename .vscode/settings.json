@@ -13,7 +13,10 @@
         "change_game_state",
         "check_game_state",
         "handle_game_replay",
-        "handle_game_pause"
+        "handle_game_pause",
+        "handle_snake_segments",
+        "clean_tail_segments",
+        "check_tail_collision"
     ],
     "Lua.diagnostics.disable": [
         "unused-local"
