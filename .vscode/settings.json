@@ -9,6 +9,13 @@
     "Lua.diagnostics.globals": [
         "handle_movement_by_keyboard",
         "check_border_collision",
-        "check_eaten_fruit"
+        "check_eaten_fruit",
+        "change_game_state",
+        "check_game_state",
+        "handle_game_replay",
+        "handle_game_pause"
+    ],
+    "Lua.diagnostics.disable": [
+        "unused-local"
     ]
 }
