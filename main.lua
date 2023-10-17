@@ -7,6 +7,7 @@ local snake = require "Snake"
 local fruit = require "Fruit"
 local in_game_snake = snake()
 local in_game_fruit = fruit()
+local last_movement_direction = ""
 local movement_direction = ""
 local movement_speed = 5;
 
@@ -41,7 +42,7 @@ end
 
 function love.update(dt)
     if game_properties.state["running"] then
-        handle_movement_by_keyboard(in_game_snake, movement_direction, movement_speed)
+        handle_movement_by_keyboard(in_game_snake, last_movement_direction, movement_direction, movement_speed)
         check_border_collision(game_properties, in_game_snake, movement_direction)
         check_eaten_fruit(in_game_snake, in_game_fruit, game_properties)
         handle_snake_segments(game_properties, in_game_snake)
@@ -51,15 +52,19 @@ end
 
 function love.keypressed(key)
     if key == "d" or key == "right" then
+        last_movement_direction = movement_direction
         movement_direction = "right"
         handle_game_replay(game_properties, in_game_snake, in_game_fruit)
     elseif key == "a" or key == "left" then
+        last_movement_direction = movement_direction
         movement_direction = "left"
         handle_game_replay(game_properties, in_game_snake, in_game_fruit)
     elseif key == "w" or key == "up" then
+        last_movement_direction = movement_direction
         movement_direction = "up"
         handle_game_replay(game_properties, in_game_snake, in_game_fruit)
     elseif key == "s" or key == "down" then
+        last_movement_direction = movement_direction
         movement_direction = "down"
         handle_game_replay(game_properties, in_game_snake, in_game_fruit)
     elseif key == "escape" then

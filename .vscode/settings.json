@@ -17,7 +17,8 @@
         "handle_snake_segments",
         "clean_tail_segments",
         "check_tail_collision",
-        "check_generic_object_collision"
+        "check_generic_object_collision",
+        "continue_current_movement"
     ],
     "Lua.diagnostics.disable": [
         "unused-local"

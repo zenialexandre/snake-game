@@ -8,14 +8,28 @@ function change_game_state(game_properties, new_state)
     game_properties.state["ended"] = new_state == "ended"
 end
 
-function handle_movement_by_keyboard(in_game_snake, movement_direction, movement_speed)
-    if movement_direction == "right" then
+function handle_movement_by_keyboard(in_game_snake, last_movement_direction, movement_direction, movement_speed)
+    if movement_direction == "right" and last_movement_direction ~= "left" then
         in_game_snake.position_x = in_game_snake.position_x + movement_speed
-    elseif movement_direction == "left" then
+    elseif movement_direction == "left" and last_movement_direction ~= "right" then
         in_game_snake.position_x = in_game_snake.position_x - movement_speed
-    elseif movement_direction == "up" then
+    elseif movement_direction == "up" and last_movement_direction ~= "down" then
         in_game_snake.position_y = in_game_snake.position_y - movement_speed
-    elseif movement_direction == "down" then
+    elseif movement_direction == "down" and last_movement_direction ~= "up" then
+        in_game_snake.position_y = in_game_snake.position_y + movement_speed
+    else
+        continue_current_movement(in_game_snake, last_movement_direction, movement_speed)
+    end
+end
+
+function continue_current_movement(in_game_snake, last_movement_direction, movement_speed)
+    if last_movement_direction == "right" then
+        in_game_snake.position_x = in_game_snake.position_x + movement_speed
+    elseif last_movement_direction == "left" then
+        in_game_snake.position_x = in_game_snake.position_x - movement_speed
+    elseif last_movement_direction == "up" then
+        in_game_snake.position_y = in_game_snake.position_y - movement_speed
+    elseif last_movement_direction == "down" then
         in_game_snake.position_y = in_game_snake.position_y + movement_speed
     end
 end
