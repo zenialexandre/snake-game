@@ -8,15 +8,15 @@ function change_game_state(game_properties, new_state)
     game_properties.state["ended"] = new_state == "ended"
 end
 
-function handle_movement_by_keyboard(in_game_snake, movement_direction)
+function handle_movement_by_keyboard(in_game_snake, movement_direction, movement_speed)
     if movement_direction == "right" then
-        in_game_snake.position_x = in_game_snake.position_x + 5
+        in_game_snake.position_x = in_game_snake.position_x + movement_speed
     elseif movement_direction == "left" then
-        in_game_snake.position_x = in_game_snake.position_x - 5
+        in_game_snake.position_x = in_game_snake.position_x - movement_speed
     elseif movement_direction == "up" then
-        in_game_snake.position_y = in_game_snake.position_y - 5
+        in_game_snake.position_y = in_game_snake.position_y - movement_speed
     elseif movement_direction == "down" then
-        in_game_snake.position_y = in_game_snake.position_y + 5
+        in_game_snake.position_y = in_game_snake.position_y + movement_speed
     end
 end
 
@@ -44,10 +44,10 @@ function handle_snake_segments(game_properties, in_game_snake)
     local snake_old_position_x = in_game_snake.position_x
     local snake_old_position_y = in_game_snake.position_y
 
-    if #in_game_snake.tail_segments > 0 then
+    if not rawequal(in_game_snake.tail_segments, nil) then
         for _, segment in ipairs(in_game_snake.tail_segments) do
-            local temp_x, temp_y = segment[1], segment[2]
-            segment[1], segment[2] = snake_old_position_x, snake_old_position_y
+            local temp_x, temp_y = segment.position_x, segment.position_y
+            segment.position_x, segment.position_y = snake_old_position_x, snake_old_position_y
             snake_old_position_x, snake_old_position_y = temp_x, temp_y
         end
     end
@@ -65,19 +65,25 @@ function check_border_collision(game_properties, in_game_snake, movement_directi
     end
 end
 
-function check_tail_collision(game_properties, in_game_snake)
-    -- TODO
+function check_tail_collision(game_properties, in_game_snake, movement_direction)
+    if not rawequal(in_game_snake.tail_segments, nil) then
+        for index = 10, #in_game_snake.tail_segments do
+            if check_generic_object_collision(in_game_snake, in_game_snake.tail_segments[index]) then
+                change_game_state(game_properties, "ended")
+            end
+        end
+    end
 end
 
 function check_eaten_fruit(in_game_snake, in_game_fruit, game_properties)
-    if (in_game_snake.position_y + in_game_snake.height > in_game_fruit.position_y)
-        and (in_game_snake.position_y < in_game_fruit.position_y + in_game_fruit.height)
-        and (in_game_snake.position_x + in_game_snake.width > in_game_fruit.position_x)
-        and (in_game_snake.position_x < in_game_fruit.position_x + in_game_fruit.width) then
-        in_game_fruit.position_x = math.random(1, love.graphics.getWidth() / 1.25)
-        in_game_fruit.position_y = math.random(1, love.graphics.getHeight() / 1.25)
+    if check_generic_object_collision(in_game_snake, in_game_fruit) then
+        local tail_segment = snake()
+        tail_segment.width, tail_segment.height = 25, 25
+        tail_segment.position_x, tail_segment.position_y = 0, 0
+        in_game_fruit.position_x = math.random(1, love.graphics.getWidth() / 1.10)
+        in_game_fruit.position_y = math.random(1, love.graphics.getHeight() / 1.10)
         game_properties.fruits_eaten = game_properties.fruits_eaten + 1
-        table.insert(in_game_snake.tail_segments, {0, 0})
+        table.insert(in_game_snake.tail_segments, tail_segment)
     end
 end
 
@@ -95,8 +101,17 @@ function check_game_state(game_properties, fonts)
     end
 end
 
+function check_generic_object_collision(first_actor, second_actor)
+    return (first_actor.position_y + first_actor.height > second_actor.position_y)
+        and (first_actor.position_y < second_actor.position_y + second_actor.height)
+        and (first_actor.position_x + first_actor.width > second_actor.position_x)
+        and (first_actor.position_x < second_actor.position_x + second_actor.width)
+end
+
 function clean_tail_segments(in_game_snake)
-    for i = 0, #in_game_snake.tail_segments do
-        in_game_snake.tail_segments[i] = nil
+    if not rawequal(in_game_snake.tail_segments, nil) then
+        for index, _ in ipairs(in_game_snake.tail_segments) do
+            in_game_snake.tail_segments[index] = nil
+        end
     end
 end

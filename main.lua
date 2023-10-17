@@ -8,6 +8,7 @@ local fruit = require "Fruit"
 local in_game_snake = snake()
 local in_game_fruit = fruit()
 local movement_direction = ""
+local movement_speed = 5;
 
 local game_properties = {
     state = {
@@ -40,7 +41,7 @@ end
 
 function love.update(dt)
     if game_properties.state["running"] then
-        handle_movement_by_keyboard(in_game_snake, movement_direction)
+        handle_movement_by_keyboard(in_game_snake, movement_direction, movement_speed)
         check_border_collision(game_properties, in_game_snake, movement_direction)
         check_eaten_fruit(in_game_snake, in_game_fruit, game_properties)
         handle_snake_segments(game_properties, in_game_snake)
@@ -63,6 +64,10 @@ function love.keypressed(key)
         handle_game_replay(game_properties, in_game_snake, in_game_fruit)
     elseif key == "escape" then
         handle_game_pause(game_properties)
+    elseif love.keyboard.isDown("lctrl", "=") then
+        movement_speed = movement_speed + 5
+    elseif love.keyboard.isDown("lctrl", "-") then
+        movement_speed = movement_speed - 5
     end
 end
 
@@ -70,8 +75,11 @@ function love.draw()
     love.graphics.setColor(0, 0.8, 0)
     love.graphics.rectangle("fill", in_game_snake.position_x, in_game_snake.position_y, in_game_snake.width, in_game_snake.height)
 
-    for _, segment in ipairs(in_game_snake.tail_segments) do
-        love.graphics.rectangle("fill", segment[1], segment[2], in_game_snake.width, in_game_snake.height, 5, 5)
+    if not rawequal(in_game_snake.tail_segments, nil) then
+        for _, segment in ipairs(in_game_snake.tail_segments) do
+            love.graphics.rectangle("fill", segment.position_x, segment.position_y,
+                in_game_snake.width, in_game_snake.height, 5, 5)
+        end
     end
 
     love.graphics.setColor(1, 0, 0)
