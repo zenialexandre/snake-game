@@ -26,8 +26,8 @@ function handle_game_replay(game_properties, in_game_snake, in_game_fruit)
         game_properties.fruits_eaten = 0
         in_game_snake.position_x = 380
         in_game_snake.position_y = 280
-        in_game_fruit.position_x = math.random(1, love.graphics.getWidth() / 1.25)
-        in_game_fruit.position_y = math.random(1, love.graphics.getWidth() / 1.25)
+        in_game_fruit.position_x = math.random(1, love.graphics.getWidth() / 1.35)
+        in_game_fruit.position_y = math.random(1, love.graphics.getWidth() / 1.35)
         change_game_state(game_properties, "running")
     else
         change_game_state(game_properties, "running")
@@ -80,8 +80,8 @@ function check_eaten_fruit(in_game_snake, in_game_fruit, game_properties)
         local tail_segment = snake()
         tail_segment.width, tail_segment.height = 25, 25
         tail_segment.position_x, tail_segment.position_y = 0, 0
-        in_game_fruit.position_x = math.random(1, love.graphics.getWidth() / 1.10)
-        in_game_fruit.position_y = math.random(1, love.graphics.getHeight() / 1.10)
+        in_game_fruit.position_x = math.random(1, love.graphics.getWidth() / 1.35)
+        in_game_fruit.position_y = math.random(1, love.graphics.getHeight() / 1.35)
         game_properties.fruits_eaten = game_properties.fruits_eaten + 1
         table.insert(in_game_snake.tail_segments, tail_segment)
     end
